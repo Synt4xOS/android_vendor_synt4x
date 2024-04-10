@@ -12,4 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include vendor/synt4x/config/BoardConfigVersion.mk
+SYNT4X_TARGET_PACKAGE := $(PRODUCT_OUT)/synt4x-$(SYNT4X_BUILD_DATE)-$(TARGET_DEVICE).zip
+
+SHA256 := prebuilts/build-tools/path/$(HOST_PREBUILT_TAG)/sha256sum
+
+.PHONY: shit
+shit: $(DEFAULT_GOAL) $(INTERNAL_OTA_PACKAGE_TARGET)
+	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(SYNT4X_TARGET_PACKAGE)
+	$(hide) $(SHA256) $(SYNT4X_TARGET_PACKAGE) | sed "s|$(PRODUCT_OUT)/||" > $(SYNT4X_TARGET_PACKAGE).sha256sum
+	@echo "Package Complete: $(SYNT4X_TARGET_PACKAGE)" >&2
